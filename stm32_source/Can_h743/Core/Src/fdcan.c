@@ -327,7 +327,7 @@ void can1_work()
 	static user_timer_t user_timer =
 	{
 		.timer = 0,
-		.condition = 1000
+		.condition = 100
 	};
 
 	static user_timer_t reset_timer =

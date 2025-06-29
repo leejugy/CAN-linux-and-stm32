@@ -30,7 +30,7 @@ static void can_init(can_ctl_t *can_ctl)
     struct can_isotp_fc_options fcopts = 
     {
         .bs = 8,         
-        .stmin = 0,     
+        .stmin = 1,     
         .wftmax = 1
     };
     if(setsockopt(can_ctl->can_poll_fd.fd, SOL_CAN_ISOTP, CAN_ISOTP_RECV_FC, &fcopts, sizeof(fcopts)) < 0)
@@ -46,10 +46,12 @@ static void can_init(can_ctl_t *can_ctl)
         exit(-3);
     }
 
+    printg("index : %d", ifr.ifr_ifru.ifru_ivalue);
+
     can_addr.can_family = AF_CAN;
     can_addr.can_addr.tp.rx_id = 0x03;
     can_addr.can_addr.tp.tx_id = 0x02;
-    can_addr.can_ifindex = ifr.ifr_ifru.ifru_ivalue;
+    can_addr.can_ifindex = ifr.ifr_ifindex;
     
     if(bind(can_ctl->can_poll_fd.fd, (struct sockaddr *) &can_addr, sizeof(can_addr)) < 0)
     {
@@ -82,14 +84,14 @@ int can_send(can_ctl_t *can_ctl)
         ret = write(can_ctl->can_poll_fd.fd, can_ctl->can_send, can_ctl->can_send_size);        
         if(ret < 0)
         {   
-            printr("fail to write %s", can_ctl->can_interface);
+            printr("fail to write %s : %s", can_ctl->can_interface, strerror(errno));
         }
         sem_post(&can_ctl->sem);
         return ret;
     }
     else if(can_ctl->can_poll_fd.revents & POLLERR)
     {
-        printr("pollfd return POLLERR");
+        printr("pollfd return POLLERR: %s", strerror(errno));
         return -1;
     }
     else if(can_ctl->can_poll_fd.revents & POLLIN)
@@ -116,17 +118,17 @@ static int can_recv(can_ctl_t *can_ctl)
     if(can_ctl->can_poll_fd.revents & POLLIN)
     {
         sem_wait(&can_ctl->sem);
-        ret = read(can_ctl->can_poll_fd.fd, can_ctl->can_recv, can_ctl->can_recv_size);        
+        ret = read(can_ctl->can_poll_fd.fd, can_ctl->can_recv, can_ctl->can_recv_size);
         if(ret < 0)
         {   
-            printr("fail to read %s", can_ctl->can_interface);
+            printr("fail to read %s : %s", can_ctl->can_interface, strerror(errno));
         }
         sem_post(&can_ctl->sem);
         return ret;
     }
     else if(can_ctl->can_poll_fd.revents & POLLERR)
     {
-        printr("pollfd return POLLERR");
+        printr("pollfd return POLLERR: %s", strerror(errno));
         return -1;
     }
     else if(can_ctl->can_poll_fd.revents & POLLOUT)
@@ -164,10 +166,12 @@ static void thread_can_send(void *arg)
     while(1)
     {
         memset(can_ctl->can_send, 0, sizeof(can_ctl->can_send));
-        sprintf(can_ctl->can_send, "can send by linux try : %d", try++);
-        can_ctl->can_send_size = strlen(can_ctl->can_send);
-        try %= 100;
-        can_send(can_ctl);
+        sprintf(can_ctl->can_send, "can send by linux try : %d", try);
+        can_ctl->can_send_size = strlen(can_ctl->can_send);        
+        if(can_send(can_ctl) > 0)
+        {
+            try = (try + 1) % 100;
+        }
 
         usleep(1000 * 1000);
     }
