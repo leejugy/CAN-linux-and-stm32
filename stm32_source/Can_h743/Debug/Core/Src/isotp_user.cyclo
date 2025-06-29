@@ -1,0 +1,3 @@
+../Core/Src/isotp_user.c:15:6:isotp_user_debug	1
+../Core/Src/isotp_user.c:27:5:isotp_user_send_can	2
+../Core/Src/isotp_user.c:38:10:isotp_user_get_ms	1

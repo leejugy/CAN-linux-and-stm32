@@ -1,0 +1,10 @@
+../Core/Src/fdcan.c:31:6:MX_FDCAN1_Init	2
+../Core/Src/fdcan.c:79:6:HAL_FDCAN_MspInit	3
+../Core/Src/fdcan.c:123:6:HAL_FDCAN_MspDeInit	2
+../Core/Src/fdcan.c:152:5:sizeof_candl	9
+../Core/Src/fdcan.c:190:5:sizeof_can	9
+../Core/Src/fdcan.c:215:6:can1_init	5
+../Core/Src/fdcan.c:255:7:HAL_FDCAN_ErrorStatusCallback	2
+../Core/Src/fdcan.c:263:12:can1_recv	4
+../Core/Src/fdcan.c:288:5:can1_send	3
+../Core/Src/fdcan.c:317:6:can1_work	10

@@ -1,0 +1,7 @@
+../Core/Src/usart.c:32:6:MX_USART1_UART_Init	8	static
+../Core/Src/usart.c:75:6:HAL_UART_MspInit	240	static
+../Core/Src/usart.c:135:6:HAL_UART_MspDeInit	16	static
+../Core/Src/usart.c:163:6:terminal_init	8	static
+../Core/Src/usart.c:172:5:__io_putchar	24	static
+../Core/Src/usart.c:183:12:terminal_recv	24	static
+../Core/Src/usart.c:206:6:uart1_work	264	static
