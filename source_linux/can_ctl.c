@@ -45,7 +45,7 @@ static void can_init(can_ctl_t *can_ctl)
         printr("fail to read interface can : %s", strerror(errno));
         exit(-3);
     }
-
+    
     printg("index : %d", ifr.ifr_ifru.ifru_ivalue);
 
     can_addr.can_family = AF_CAN;
