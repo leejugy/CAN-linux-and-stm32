@@ -318,10 +318,13 @@ void can1_work()
 {
 	uint8_t recv[CLASSIC_CAN_SIZE] = {0, };
 	uint8_t can1_isotp_recv1[ISOTP_MAX_SIZE] = {0, };
-	uint8_t can1_isotp_send1[ISOTP_MAX_SIZE] = "hellow world! this is isotp can 1 send data.";
+	uint8_t can1_isotp_send1[ISOTP_MAX_SIZE] = {0, };
 	uint16_t id = 0;
 	uint16_t out_size = 0;
 	int ret = 0;
+	static int try = 0;
+
+	sprintf((char *)can1_isotp_send1,"hellow world! this is isotp can 1 send data. %d", try);
 
 	static int init_flag = 0;
 	static user_timer_t user_timer =
@@ -375,6 +378,10 @@ void can1_work()
 	check_timer(&user_timer)
 	{
 		user_timer.timer = HAL_GetTick();
+		if(ISOTP_SEND_STATUS_INPROGRESS != can1_link1.send_status)
+		{
+			try = (try + 1) % 1000;
+		}
 		isotp_send(&can1_link1, can1_isotp_send1, strlen((char *)can1_isotp_send1));
 	}
 }

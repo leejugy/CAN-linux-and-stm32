@@ -7,4 +7,4 @@
 ../Core/Src/fdcan.c:255:7:HAL_FDCAN_ErrorStatusCallback	16	static
 ../Core/Src/fdcan.c:263:12:can1_recv	64	static
 ../Core/Src/fdcan.c:288:5:can1_send	64	static
-../Core/Src/fdcan.c:317:6:can1_work	8232	static
+../Core/Src/fdcan.c:317:6:can1_work	8216	static
